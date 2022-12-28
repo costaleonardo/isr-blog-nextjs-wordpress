@@ -59,7 +59,82 @@ export async function getAllPostsWithSlug() {
   return data?.posts
 }
 
-export async function getAllPostsForHome(preview) {
+/**
+ * Lists of Posts 
+ */
+
+export async function getPostList ( preview ) {
+  const data = await fetchAPI(
+    `
+    query GetPostsEdges {
+      posts {
+        edges {
+          node {
+            id
+            title
+            date
+          }
+        }
+      }
+    }
+  `,
+    {
+      variables: {
+        onlyEnabled: !preview,
+        preview,
+      },
+    }
+  )
+
+  return data?.posts
+}
+
+/**
+ * Placeholder function to make GraphQL queries
+ */
+export async function queryFunction ( preview ) {
+  const data = await fetchAPI(
+    `
+    query AllPosts {
+      posts(first: 20, where: { orderby: { field: DATE, order: DESC } }) {
+        edges {
+          node {
+            title
+            excerpt
+            slug
+            date
+            featuredImage {
+              node {
+                sourceUrl
+              }
+            }
+            author {
+              node {
+                name
+                firstName
+                lastName
+                avatar {
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `,
+    {
+      variables: {
+        onlyEnabled: !preview,
+        preview,
+      },
+    }
+  )
+
+  return data?.posts
+}
+
+export async function getAllPostsForHome( preview ) {
   const data = await fetchAPI(
     `
     query AllPosts {
